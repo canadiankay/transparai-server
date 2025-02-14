@@ -12,7 +12,6 @@ const openai = new OpenAI({
 async function generateResponse(formData) {
   const { products, industry, painPoints } = formData;
 
-  // Construct the prompt for OpenAI
   const prompt = `
   
   I am a small business owner looking to explore AI-powered solutions within the Microsoft ecosystem. Based on the following inputs, provide tailored recommendations on how Microsoft AI tools can enhance my business operations:

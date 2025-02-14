@@ -1,38 +1,38 @@
-import { generateRecommendations } from './openai.js';
+import { generateResponse } from './openai.js';
 import { sanitizeInput } from '../utils/sanitize.js';
 
 export const processUserData = async (req, res) => {
   try {
     const { industry, tools, painPoints } = req.body;
 
-    const sanitizedData = {
-      industry: sanitizeInput(industry),
-      tools: Array.isArray(tools) ? tools.map(sanitizeInput) : [],
-      painPoints: sanitizeInput(painPoints)
-    };
-
-    if (!sanitizedData.industry || !sanitizedData.tools.length || !sanitizedData.painPoints) {
+    if (!industry || !tools || !painPoints) {
       return res.status(400).json({ 
-        error: "All fields are required.",
+        error: "Missing required fields",
         details: {
-          industry: !sanitizedData.industry ? "Industry is required" : null,
-          tools: !sanitizedData.tools.length ? "At least one tool must be selected" : null,
-          painPoints: !sanitizedData.painPoints ? "Pain points description is required" : null
+          industry: !industry ? "Industry is required" : null,
+          tools: !tools ? "Tools are required" : null,
+          painPoints: !painPoints ? "Pain points are required" : null
         }
       });
     }
 
+    const sanitizedData = {
+      industry: sanitizeInput(industry),
+      tools: Array.isArray(tools) ? tools.map(sanitizeInput) : [sanitizeInput(tools)],
+      painPoints: sanitizeInput(painPoints)
+    };
+
     const formattedData = {
       industry: sanitizedData.industry,
-      tools: sanitizedData.tools.join(", "),
+      products: sanitizedData.tools.join(", "),
       painPoints: sanitizedData.painPoints
     };
 
-    const recommendations = await generateRecommendations(formattedData);
+    const aiResponse = await generateResponse(formattedData);
 
     return res.status(200).json({ 
       success: true,
-      recommendations 
+      recommendations: aiResponse 
     });
 
   } catch (error) {
