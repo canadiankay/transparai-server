@@ -1,16 +1,8 @@
 import express from "express";
-import { generateResponse } from "../controllers/openai.js";
+import { processUserData } from "../controllers/data-controller.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  try {
-    const response = await generateResponse(req.body);
-
-    res.send(response);
-  } catch (error) {
-    res.status(500).json({ error: "Server error generating packing list." });
-  }
-});
+router.post("/", processUserData);
 
 export default router;
