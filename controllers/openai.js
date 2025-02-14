@@ -9,32 +9,36 @@ const openai = new OpenAI({
   apiKey: APIKEY,
 });
 
-async function generatePackingList(formData) {
-  const {
-    //inputs from the form
-  } = formData;
+async function generateResponse(formData) {
+  const { products, industry, painPoints } = formData;
 
   // Construct the prompt for OpenAI
   const prompt = `
   
   I am a small business owner looking to explore AI-powered solutions within the Microsoft ecosystem. Based on the following inputs, provide tailored recommendations on how Microsoft AI tools can enhance my business operations:
   
-  - **Current Microsoft products I use:** ${input1}
-  - **Industry I am in:** ${input2}
-  - **My business pain points:** ${input3}
+  - **Current Microsoft products I use:** ${products}
+  - **Industry I am in:** ${industry}
+  - **My business pain points:** ${painPoints}
   
-  For each recommended Microsoft AI solution, include:  
-  1. **Product Name & Description**  Identify which Microsoft AI-powered products best address my pain points. Provide a detailed explanation of what the product does.  
-  2. **Use Case Explanation**  Explain specifically how the AI solution can be applied in my business, with real-world examples tailored to my industry.  
-  3. **Implementation Guidance**  Provide a high-level overview of how I can start using this solution, including any integrations with my existing Microsoft tools.  
+  Response structure (add 1-3 relevant AI tools):
+  Start your sentence with: Here are some recommendations... 
+  1. Microsoft Syntex - Document Management Made Easy
+  What it does: Syntex uses AI to organize your documents and extract important data from them.
+  How it helps you: For example, if you have customer records or service invoices, Syntex can automatically extract key details (like customer name or invoice amount) and organize them for easy access.
+  How to start:
+  Enable Syntex in SharePoint (your document storage platform).
+  Set up automatic categorization rules (e.g., invoices go to a "Finance" folder).
+  Syntex will begin scanning and tagging documents for you.
   
-  Additionally, address common concerns about AI adoption, including but not limited to:  
-  - **Transparency & Explainability**  How does Microsoft ensure AI decisions are clear and understandable?  
-  - **Data Privacy & Security**  What measures does Microsoft have in place to protect sensitive business and customer data?  
-  - **Bias & Fairness**  How does Microsoft address bias in AI models to ensure fair and ethical outcomes?  
-  - **Cost & ROI Considerations**  What pricing models exist, and how can a small business ensure a strong return on investment with AI adoption?  
+  Adressing common concerns(include up to 4):
+  1. Is AI trustworthy?
+Yes. Microsoft’s AI solutions, like Power BI, show you how they make decisions. For example, Power BI shows the reasoning behind its predictions, so you know how the insights are formed.
+
+
+
   
-  Ensure that the response is clear and written in simple language. (e.g Is AI trustworthy?). Dont add too much text. PLAIN & SIMPLE. How to start should be detailed. no emojis.
+  Ensure that the response is clear and written in simple language. (e.g Is AI trustworthy?). Dont add too much text. PLAIN & SIMPLE. No * or other symbols. No bold text! Use bullet points/numbers. How to start should be detailed. no emojis. Remote 
   `;
 
   try {
@@ -54,6 +58,7 @@ async function generatePackingList(formData) {
     });
 
     let generatedResponse = response.choices[0].message.content.trim();
+    console.log(generatedResponse);
 
     return generatedResponse;
   } catch (error) {
@@ -66,3 +71,5 @@ async function generatePackingList(formData) {
     throw error;
   }
 }
+
+export { generateResponse };
